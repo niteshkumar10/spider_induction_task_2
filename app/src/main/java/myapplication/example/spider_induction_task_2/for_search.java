@@ -38,7 +38,7 @@ public class for_search extends AppCompatActivity implements search_view_adapter
     Button for_search,back_to_mainpage,retry;
     RecyclerView search_view;
     ArrayList<search_view> mExampleList;
-    String url,media_type,web_url;
+    String url,media_type,web_url,from_edittext;
     search_view_adapter mExampleAdapter;
     String title;
     TextView errortextview2;
@@ -96,7 +96,9 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                 if(search_box.getText().length()== 0)search_box.setError("please enter thing to search");
                 else{
                     search_box.setEnabled(false);
-                    web_url = web_url+search_box.getText().toString();
+                    from_edittext = search_box.getText().toString();
+                    web_url = web_url+from_edittext;
+                    from_edittext = "";
                     progressBar.setMax(100);
                     progressBar.setIndeterminate(true);
                     progressBar.setVisibility(View.VISIBLE);
