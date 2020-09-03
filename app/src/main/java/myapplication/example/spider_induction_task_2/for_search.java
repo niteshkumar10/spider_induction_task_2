@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -42,11 +43,13 @@ public class for_search extends AppCompatActivity implements search_view_adapter
     String title;
     TextView errortextview2;
     ImageView errorimageview2;
+    ProgressBar progressBar;
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_for_search);
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar2);
         back_to_mainpage = (Button)findViewById(R.id.go_to_prev);
         search_box = (EditText)findViewById(R.id.search_box);
         search_view = (RecyclerView)findViewById(R.id.search_view);
@@ -54,6 +57,7 @@ public class for_search extends AppCompatActivity implements search_view_adapter
         errortextview2 = (TextView)findViewById(R.id.errortextview2);
         errorimageview2 = (ImageView)findViewById(R.id.error_imageview2);
         retry = (Button)findViewById(R.id.retry_forsearch);
+        progressBar.setVisibility(View.INVISIBLE);
         search_view.setVisibility(View.VISIBLE);
         errorimageview2.setVisibility(View.INVISIBLE);
         errortextview2.setVisibility(View.INVISIBLE);
@@ -93,6 +97,9 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                 else{
                     search_box.setEnabled(false);
                     web_url = web_url+search_box.getText().toString();
+                    progressBar.setMax(100);
+                    progressBar.setIndeterminate(true);
+                    progressBar.setVisibility(View.VISIBLE);
                     parseJSON();
                 }
             }
@@ -126,6 +133,8 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                                     }
                                     mExampleAdapter = new search_view_adapter(mExampleList);
                                     search_view.setAdapter(mExampleAdapter);
+                                    progressBar.setVisibility(View.GONE);
+                                    mExampleAdapter.setOnItemClickListener(for_search.this);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -149,7 +158,7 @@ public class for_search extends AppCompatActivity implements search_view_adapter
 
     @Override
     public void onItemClick( int position ) {
-        Intent detailIntent = new Intent(this, detail.class);
+        Intent detailIntent = new Intent(getApplicationContext(), detail.class);
         search_view clickedItem = mExampleList.get(position);
         detailIntent.putExtra("image_url", clickedItem.getURL());
         startActivity(detailIntent);
