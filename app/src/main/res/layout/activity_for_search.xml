@@ -27,30 +27,20 @@
         android:background="?android:attr/actionModeWebSearchDrawable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.864"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/search_box"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.175" />
+        app:layout_constraintVertical_bias="0.11"
+        tools:targetApi="lollipop" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_view"
-        android:layout_width="345dp"
-        android:layout_height="433dp"
-        android:layout_marginBottom="96dp"
+        android:layout_width="360dp"
+        android:layout_height="557dp"
+        android:layout_marginBottom="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/go_to_prev"
-        android:layout_width="166dp"
-        android:layout_height="48dp"
-        android:text="GO TO MAIN PAGE"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
 
     <ImageView
         android:id="@+id/error_imageview2"

@@ -116,6 +116,7 @@ public class for_video_image extends AppCompatActivity {
                                 },10000);
                             } else if (response.getString("media_type").equalsIgnoreCase("video")) {
                                 progressBar.setVisibility(View.GONE);
+                                image_url = response.getString("url");
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(image_url)));
                             } else {
                                 no_content.setText(response.getString("media_type"));

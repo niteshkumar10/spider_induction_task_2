@@ -55,8 +55,6 @@ public class search_view_adapter extends RecyclerView.Adapter<search_view_adapte
     @Override
     public void onBindViewHolder( ExampleViewHolder holder, int position ) {
         search_view currentItem = mExampleList.get(position);
-        String imageUrl = currentItem.getURL();
-        String media_type =  currentItem.getmedia_type();
         String title = currentItem.getTitle();
         holder.textview.setText(title);
     }

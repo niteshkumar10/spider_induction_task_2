@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     TextView selected_date;
     Button enter,select_date,change_date,search;
     String date_selected;
+    Calendar calendar;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -32,9 +33,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         enter = (Button)findViewById(R.id.enter);
         change_date.setVisibility(View.INVISIBLE);
         enter.setVisibility(View.INVISIBLE);
+        calendar = Calendar.getInstance();
+        date_selected = calendar.get(Calendar.YEAR) + "-" + singledigittaker(calendar.get((Calendar.MONTH)))+"-"+singledigittaker(calendar.get(Calendar.DATE));
+        selected_date.setText(day_of_week(calendar.get(Calendar.DAY_OF_WEEK)) + ", " +month_getter(calendar.get(Calendar.MONTH)) + " "+singledigittaker(calendar.get(Calendar.DATE))+ " ,"+calendar.get(Calendar.YEAR));
         select_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
+                search.setVisibility(View.INVISIBLE);
                 DialogFragment datePicker = new dateselection();
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
@@ -100,5 +105,36 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             s = num + "";
             return s;
         }
+    }
+
+    public String day_of_week(Integer num){
+        switch (num){
+            case 2: return "Monday";
+            case 3: return "Tuesday";
+            case 4: return "Wednesday";
+            case 5: return "Thursday";
+            case 6: return "Friday";
+            case 7: return "Saturday";
+            case 1: return "Sunday";
+        }
+        return "";
+    }
+
+    public String month_getter(Integer num){
+        switch (num){
+            case 0:return "January";
+            case 1: return "Febuarary";
+            case 2:return  "March";
+            case 3:return "April";
+            case 4: return"May";
+            case 5: return  "June";
+            case 6: return  "July";
+            case 7: return  "August";
+            case 8: return  "September";
+            case 9: return  "October";
+            case 10: return  "November";
+            case 11: return  "December";
+        }
+        return "";
     }
 }
