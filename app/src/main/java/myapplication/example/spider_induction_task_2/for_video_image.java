@@ -98,7 +98,7 @@ public class for_video_image extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground( Void... voids ) {
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, searching_url, null, new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
