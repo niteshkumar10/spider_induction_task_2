@@ -11,13 +11,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +46,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class for_search extends AppCompatActivity implements search_view_adapter.OnItemClickListener {
+public class for_search extends AppCompatActivity implements search_view_adapter.OnItemClickListener{
 
     EditText search_box;
     Button for_search,retry;
-    RecyclerView search_view;
+    RecyclerView search_view,option_bar;
     ArrayList<search_view> mExampleList;
     String url,media_type,web_url,from_edittext;
     search_view_adapter mExampleAdapter;
@@ -51,12 +58,16 @@ public class for_search extends AppCompatActivity implements search_view_adapter
     TextView errortextview2;
     ImageView errorimageview2;
     ProgressBar progressBar;
-    Boolean checked_once = false;
+    ArrayList<String> keywords = new ArrayList<>();
+    ArrayList<String> keywords_complete_list = new ArrayList<>();
+    recycler_view_adapter_2 option_bar_adapter;
+    Boolean visible_box = true;
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_for_search);
 
+        option_bar = (RecyclerView)findViewById(R.id.recyclerview_2);
         progressBar = (ProgressBar)findViewById(R.id.progressBar2);
         search_box = (EditText)findViewById(R.id.search_box);
         search_view = (RecyclerView)findViewById(R.id.search_view);
@@ -71,6 +82,7 @@ public class for_search extends AppCompatActivity implements search_view_adapter
         errortextview2.setVisibility(View.INVISIBLE);
         retry.setVisibility(View.INVISIBLE);
         search_view.setVisibility(View.INVISIBLE);
+        option_bar.setVisibility(View.INVISIBLE);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -90,8 +102,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
             }
         });
 
-
-
         search_view.setHasFixedSize(true);
         search_view.setLayoutManager(new LinearLayoutManager(this));
         mExampleList = new ArrayList<>();
@@ -99,28 +109,18 @@ public class for_search extends AppCompatActivity implements search_view_adapter
         for_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
-                if(search_box.getText().length()== 0)search_box.setError("please enter thing to search");
+                if(!visible_box)search_box.setVisibility(View.VISIBLE);
                 else{
-                    from_edittext = search_box.getText().toString();
-                    web_url = web_url+from_edittext;
-                    progressBar.setMax(100);
-                    progressBar.setIndeterminate(true);
-                    progressBar.setVisibility(View.VISIBLE);
-                    UIUtil.hideKeyboard(for_search.this);
-                    search_box.setEnabled(false);
-                    search_view.setVisibility(View.VISIBLE);
-                    checked_once = true;
-                    parseJSON();
-                }
-            }
-        });
-        search_box.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange( View v, boolean hasFocus ) {
-                if(hasFocus){
-                    if(checked_once){
-                        Intent next_search = new Intent(getApplicationContext(),for_search.class);
-                        startActivity(next_search);
+                    if(search_box.getText().length()== 0)search_box.setError("please enter thing to search");
+                    else{
+                        from_edittext = search_box.getText().toString();
+                        web_url = web_url+from_edittext;
+                        progressBar.setMax(100);
+                        progressBar.setIndeterminate(true);
+                        progressBar.setVisibility(View.VISIBLE);
+                        UIUtil.hideKeyboard(for_search.this);
+                        search_view.setVisibility(View.VISIBLE);
+                        parseJSON();
                     }
                 }
             }
@@ -147,19 +147,25 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                                             JSONObject obj_2 = array_3.getJSONObject(0);
                                             JSONObject obj = array_2.getJSONObject(0);
                                             media_type = obj.getString("render");
+                                            url = obj.getString("href");
                                             if(obj_2.has("description")) descreption = obj_2.getString("description");
                                             else if(obj_2.has("description_508"))descreption = obj_2.getString("description_508");
                                             else descreption = "";
-                                            Log.d("status",descreption);
                                             title = obj_2.getString("title");
-                                            url = obj.getString("href");
-                                            mExampleList.add(new search_view(url,media_type,title,descreption));
+                                            JSONArray array_4 = obj_2.getJSONArray("keywords");
+                                            for(int j = 0; j < array_4.length(); j++){
+                                                keywords.add(array_4.getString(j));
+                                                keywords_complete_list.add(array_4.getString(j));
+                                            }
+                                            mExampleList.add(new search_view(url,media_type,title,descreption,keywords));
+                                            keywords.clear();
                                         }
                                     }
                                     mExampleAdapter = new search_view_adapter(mExampleList);
                                     search_view.setAdapter(mExampleAdapter);
                                     progressBar.setVisibility(View.GONE);
                                     mExampleAdapter.setOnItemClickListener(for_search.this);
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -177,7 +183,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
             @Override
             protected void onPostExecute( Void aVoid ) {
                 super.onPostExecute(aVoid);
-                search_box.setEnabled(true);
             }
         }.execute();
     }
@@ -191,4 +196,28 @@ public class for_search extends AppCompatActivity implements search_view_adapter
         startActivity(detailIntent);
     }
 
+    public ArrayList<String> set_the_unique(){
+        ArrayList<String> result = new ArrayList<>();
+        result.add(keywords_complete_list.get(0));
+        Boolean matched = false;
+        for(int i = 1; i < (keywords_complete_list.size()); i++){
+            for(int j = 0; j < result.size(); j++){
+                if((keywords_complete_list.get(i).equalsIgnoreCase(result.get(j))))matched = true;
+            }
+            if(!matched){
+                result.add(keywords_complete_list.get(i));
+            }
+        }
+        return result;
+    }
+
+    public void setting_option_bar(){
+        option_bar.setHasFixedSize(true);
+        option_bar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        search_box.setVisibility(View.INVISIBLE);
+        visible_box = false;
+        option_bar_adapter= new recycler_view_adapter_2(set_the_unique());
+        option_bar.setAdapter(option_bar_adapter);
+        option_bar.setVisibility(View.VISIBLE);
+    }
 }
