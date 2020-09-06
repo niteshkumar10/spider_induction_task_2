@@ -11,21 +11,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    TextView selected_date;
+    TextView selected_date,error;
     Button enter,select_date,change_date,search;
     String date_selected;
     Calendar calendar;
+    Integer today_date,today_month,today_year;
+    Boolean error_visible = false;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        error =(TextView)findViewById(R.id.error);
         search = (Button)findViewById(R.id.search);
         select_date = (Button)findViewById(R.id.select_date);
         selected_date = (TextView)findViewById(R.id.selected_date);
@@ -33,13 +37,18 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         enter = (Button)findViewById(R.id.enter);
         change_date.setVisibility(View.INVISIBLE);
         enter.setVisibility(View.INVISIBLE);
+        error.setVisibility(View.INVISIBLE);
         calendar = Calendar.getInstance();
+        today_date = calendar.get(Calendar.DATE);
+        today_month = calendar.get(Calendar.MONTH);
+        today_year = calendar.get(Calendar.YEAR);
         date_selected = calendar.get(Calendar.YEAR) + "-" + singledigittaker(calendar.get((Calendar.MONTH)))+"-"+singledigittaker(calendar.get(Calendar.DATE));
         selected_date.setText(day_of_week(calendar.get(Calendar.DAY_OF_WEEK)) + ", " +month_getter(calendar.get(Calendar.MONTH)) + " "+singledigittaker(calendar.get(Calendar.DATE))+ " ,"+calendar.get(Calendar.YEAR));
         select_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
                 search.setVisibility(View.INVISIBLE);
+                if(error_visible)error.setVisibility(View.INVISIBLE);
                 DialogFragment datePicker = new dateselection();
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
@@ -52,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 select_date.setVisibility(View.VISIBLE);
                 change_date.setVisibility(View.INVISIBLE);
                 search.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -86,13 +96,19 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        date_selected = year+"-"+singledigittaker(month+1)+"-"+singledigittaker(dayOfMonth);
-        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
-        selected_date.setText(currentDateString);
-        enter.setVisibility(View.VISIBLE);
-        change_date.setVisibility(View.VISIBLE);
-        select_date.setVisibility(View.INVISIBLE);
-        search.setVisibility(View.INVISIBLE);
+        if((year <= today_year) && (month <= today_month) && (dayOfMonth <= today_date )){
+            date_selected = year+"-"+singledigittaker(month+1)+"-"+singledigittaker(dayOfMonth);
+            String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+            selected_date.setText(currentDateString);
+            enter.setVisibility(View.VISIBLE);
+            change_date.setVisibility(View.VISIBLE);
+            select_date.setVisibility(View.INVISIBLE);
+            search.setVisibility(View.INVISIBLE);
+        }
+        else
+        error.setVisibility(View.VISIBLE);
+        error.setText("Date must be between Jun 16, 1995 and "+month_getter(today_month)+" "+singledigittaker(today_date)+", "+today_year);
+        error_visible = true;
     }
 
     public String singledigittaker(int num){

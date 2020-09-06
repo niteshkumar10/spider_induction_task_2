@@ -103,9 +103,8 @@ public class for_search extends AppCompatActivity implements search_view_adapter
         });
 
         search_view.setHasFixedSize(true);
-        search_view.setLayoutManager(new LinearLayoutManager(this));
         mExampleList = new ArrayList<>();
-        web_url = "https://images-api.nasa.gov/search?q=";
+        search_view.setLayoutManager(new LinearLayoutManager(this));
         for_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -113,8 +112,10 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                 else{
                     if(search_box.getText().length()== 0)search_box.setError("please enter thing to search");
                     else{
+                        web_url = "https://images-api.nasa.gov/search?q=";
                         from_edittext = search_box.getText().toString();
                         web_url = web_url+from_edittext;
+                        from_edittext = "";
                         progressBar.setMax(100);
                         progressBar.setIndeterminate(true);
                         progressBar.setVisibility(View.VISIBLE);
@@ -123,6 +124,31 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                         parseJSON();
                     }
                 }
+            }
+        });
+
+        search_box.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged( CharSequence s, int start, int count, int after ) {
+
+            }
+
+            @Override
+            public void onTextChanged( CharSequence s, int start, int before, int count ) {
+                web_url = "https://images-api.nasa.gov/search?q=";
+                from_edittext = search_box.getText().toString();
+                web_url = web_url+from_edittext;
+                from_edittext = "";
+                progressBar.setMax(100);
+                progressBar.setIndeterminate(true);
+                progressBar.setVisibility(View.VISIBLE);
+                search_view.setVisibility(View.VISIBLE);
+                parseJSON();
+            }
+
+            @Override
+            public void afterTextChanged( Editable s ) {
+
             }
         });
 
@@ -137,28 +163,33 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
+                                    mExampleList.clear();
                                     JSONObject obj_1 = response.getJSONObject("collection");
                                     JSONArray array_1 = obj_1.getJSONArray("items");
-                                    for (int i = 0; i < array_1.length(); i++) {
-                                        JSONObject hit = array_1.getJSONObject(i);
-                                        if(hit.has("links")){
-                                            JSONArray array_2 = hit.getJSONArray("links");
-                                            JSONArray array_3 = hit.getJSONArray("data");
-                                            JSONObject obj_2 = array_3.getJSONObject(0);
-                                            JSONObject obj = array_2.getJSONObject(0);
-                                            media_type = obj.getString("render");
-                                            url = obj.getString("href");
-                                            if(obj_2.has("description")) descreption = obj_2.getString("description");
-                                            else if(obj_2.has("description_508"))descreption = obj_2.getString("description_508");
-                                            else descreption = "";
-                                            title = obj_2.getString("title");
-                                            JSONArray array_4 = obj_2.getJSONArray("keywords");
-                                            for(int j = 0; j < array_4.length(); j++){
-                                                keywords.add(array_4.getString(j));
-                                                keywords_complete_list.add(array_4.getString(j));
+                                    if(array_1.length() != 0) {
+                                        for (int i = 0; i < array_1.length(); i++) {
+                                            JSONObject hit = array_1.getJSONObject(i);
+                                            if (hit.has("links")) {
+                                                JSONArray array_2 = hit.getJSONArray("links");
+                                                JSONArray array_3 = hit.getJSONArray("data");
+                                                JSONObject obj_2 = array_3.getJSONObject(0);
+                                                JSONObject obj = array_2.getJSONObject(0);
+                                                media_type = obj.getString("render");
+                                                url = obj.getString("href");
+                                                if (obj_2.has("description"))
+                                                    descreption = obj_2.getString("description");
+                                                else if (obj_2.has("description_508"))
+                                                    descreption = obj_2.getString("description_508");
+                                                else descreption = "";
+                                                title = obj_2.getString("title");
+                                                JSONArray array_4 = obj_2.getJSONArray("keywords");
+                                                for (int j = 0; j < array_4.length(); j++) {
+                                                    keywords.add(array_4.getString(j));
+                                                    keywords_complete_list.add(array_4.getString(j));
+                                                }
+                                                mExampleList.add(new search_view(url, media_type, title, descreption, keywords));
+                                                keywords.clear();
                                             }
-                                            mExampleList.add(new search_view(url,media_type,title,descreption,keywords));
-                                            keywords.clear();
                                         }
                                     }
                                     mExampleAdapter = new search_view_adapter(mExampleList);

@@ -104,23 +104,26 @@ public class for_video_image extends AppCompatActivity {
                     @Override
                     public void onResponse( JSONObject response ) {
                         try {
-                            if (response.getString("media_type").equalsIgnoreCase("image")) {
-                                image_url = response.getString("url");
-                                Picasso.with(getApplicationContext()).load(image_url).fit().centerInside().into(imageView);
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                },10000);
-                            } else if (response.getString("media_type").equalsIgnoreCase("video")) {
-                                progressBar.setVisibility(View.GONE);
-                                image_url = response.getString("url");
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(image_url)));
-                            } else {
-                                no_content.setText(response.getString("media_type"));
-                                progressBar.setVisibility(View.GONE);
+                            if(response.has("media_type")){
+                                Log.d("status","media_type found");
+                                if (response.getString("media_type").equalsIgnoreCase("image")) {
+                                    image_url = response.getString("url");
+                                    Picasso.with(getApplicationContext()).load(image_url).fit().centerInside().into(imageView);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressBar.setVisibility(View.GONE);
+                                        }
+                                    },10000);
+                                } else if (response.getString("media_type").equalsIgnoreCase("video")) {
+                                    progressBar.setVisibility(View.GONE);
+                                    image_url = response.getString("url");
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(image_url)));
+                                } else {
+                                    no_content.setText(response.getString("media_type"));
+                                    progressBar.setVisibility(View.GONE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
