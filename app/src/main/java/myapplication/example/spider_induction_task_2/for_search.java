@@ -127,30 +127,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
             }
         });
 
-        search_box.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged( CharSequence s, int start, int count, int after ) {
-
-            }
-
-            @Override
-            public void onTextChanged( CharSequence s, int start, int before, int count ) {
-                web_url = "https://images-api.nasa.gov/search?q=";
-                from_edittext = search_box.getText().toString();
-                web_url = web_url+from_edittext;
-                from_edittext = "";
-                progressBar.setMax(100);
-                progressBar.setIndeterminate(true);
-                progressBar.setVisibility(View.VISIBLE);
-                search_view.setVisibility(View.VISIBLE);
-                parseJSON();
-            }
-
-            @Override
-            public void afterTextChanged( Editable s ) {
-
-            }
-        });
 
     }
     private void parseJSON(){
@@ -185,9 +161,9 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                                                 JSONArray array_4 = obj_2.getJSONArray("keywords");
                                                 for (int j = 0; j < array_4.length(); j++) {
                                                     keywords.add(array_4.getString(j));
-                                                    keywords_complete_list.add(array_4.getString(j));
                                                 }
                                                 mExampleList.add(new search_view(url, media_type, title, descreption, keywords));
+                                                keywords_complete_list.addAll(keywords);
                                                 keywords.clear();
                                             }
                                         }
@@ -196,7 +172,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                                     search_view.setAdapter(mExampleAdapter);
                                     progressBar.setVisibility(View.GONE);
                                     mExampleAdapter.setOnItemClickListener(for_search.this);
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

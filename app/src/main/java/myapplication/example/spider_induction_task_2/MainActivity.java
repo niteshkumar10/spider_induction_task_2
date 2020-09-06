@@ -94,10 +94,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     @Override
     public void onDateSet( DatePicker view, int year, int month, int dayOfMonth ) {
         Calendar c = Calendar.getInstance();
+        Log.d("status",year+" "+month+" "+dayOfMonth);
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        if((year < today_year) && (month < today_month) && (dayOfMonth < today_date )){
+        if((year <= today_year) && (month <= today_month) && (dayOfMonth < today_date )){
             date_selected = year+"-"+singledigittaker(month+1)+"-"+singledigittaker(dayOfMonth);
             String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
             selected_date.setText(currentDateString);
