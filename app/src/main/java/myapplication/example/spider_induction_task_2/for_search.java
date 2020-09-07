@@ -63,7 +63,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
     ArrayList<String> keywords = new ArrayList<>();
     ArrayList<String> keywords_complete_list = new ArrayList<>();
     recycler_view_adapter_2 option_bar_adapter;
-    Boolean visible_box = true;
     ArrayList<String> result;
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -117,8 +116,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
         for_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
-                if(!visible_box)search_box.setVisibility(View.VISIBLE);
-                else{
                     if(search_box.getText().length()== 0)search_box.setError("please enter thing to search");
                     else{
                         keywords_complete_list.clear();
@@ -133,7 +130,7 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                         search_view.setVisibility(View.VISIBLE);
                         parseJSON();
                     }
-                }
+
             }
         });
 
@@ -161,33 +158,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                 search_view.setVisibility(View.VISIBLE);
                 scroll_down.setVisibility(View.VISIBLE);
                 mExampleAdapter.getFilter().filter(null);
-            }
-        });
-
-        search_box.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged( CharSequence s, int start, int count, int after ) {
-
-            }
-
-            @Override
-            public void onTextChanged( CharSequence s, int start, int before, int count ) {
-               if(count % 2 == 0){
-                    keywords_complete_list.clear();
-                   web_url = "https://images-api.nasa.gov/search?q=";
-                    from_edittext = search_box.getText().toString();
-                    web_url = web_url+from_edittext;
-                    from_edittext = "";
-                    progressBar.setMax(100);
-                    progressBar.setIndeterminate(true);
-                    progressBar.setVisibility(View.VISIBLE);
-                    search_view.setVisibility(View.VISIBLE);
-                    parseJSON();
-               }
-            }
-
-            @Override
-            public void afterTextChanged( Editable s ) {
             }
         });
     }
