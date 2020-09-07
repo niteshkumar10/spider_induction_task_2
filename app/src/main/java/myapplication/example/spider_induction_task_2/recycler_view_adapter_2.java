@@ -11,12 +11,12 @@ import java.util.ArrayList;
 
 public class recycler_view_adapter_2 extends RecyclerView.Adapter<recycler_view_adapter_2.ExampleViewHolder> {
     private ArrayList<String> mExampleList;
-    private recycler_view_adapter_2.OnItemClickListener mListener;
+    private onoptionclicklistner mListener;
 
-    public interface OnItemClickListener {
+    public interface onoptionclicklistner {
         void onItemClick(int position);
     }
-    public void setOnItemClickListener( recycler_view_adapter_2.OnItemClickListener listener) {
+    public void setonoptionclicklistener( onoptionclicklistner listener) {
         mListener = listener;
     }
     public class ExampleViewHolder extends RecyclerView.ViewHolder {
@@ -50,7 +50,7 @@ public class recycler_view_adapter_2 extends RecyclerView.Adapter<recycler_view_
 
     @Override
     public void onBindViewHolder( recycler_view_adapter_2.ExampleViewHolder holder, int position ) {
-        String currentItem = mExampleList.get(position);
+        String currentItem = mExampleList.get(position).toString();
         holder.textview.setText(currentItem);
     }
 

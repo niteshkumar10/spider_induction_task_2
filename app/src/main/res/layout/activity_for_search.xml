@@ -13,33 +13,36 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textColor="@android:color/background_dark"
-        app:layout_constraintBottom_toTopOf="@+id/search_view"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerview_2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.323"
+        app:layout_constraintHorizontal_bias="0.293"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.491" />
+        app:layout_constraintVertical_bias="0.851" />
 
     <Button
         android:id="@+id/to_search"
         android:layout_width="56dp"
         android:layout_height="46dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="13dp"
         android:background="?android:attr/actionModeWebSearchDrawable"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerview_2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.151"
         app:layout_constraintStart_toEndOf="@+id/search_box"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.08"
+        app:layout_constraintVertical_bias="0.87"
         tools:targetApi="lollipop" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_view"
         android:layout_width="356dp"
         android:layout_height="544dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -88,11 +91,36 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_2"
-        android:layout_width="359dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="6dp"
-        app:layout_constraintBottom_toTopOf="@+id/search_view"
+        android:layout_width="211dp"
+        android:layout_height="479dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="@+id/search_view"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/more_option"
+        android:layout_width="38dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/hamburger"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerview_2"
+        app:layout_constraintEnd_toStartOf="@+id/search_box"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_box" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.971" />
+
+    <Button
+        android:id="@+id/clear_constraint"
+        android:layout_width="54dp"
+        android:layout_height="57dp"
+        android:background="@drawable/images"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.419"
+        app:layout_constraintStart_toEndOf="@+id/progressBar2"
+        app:layout_constraintTop_toBottomOf="@+id/to_search"
+        app:layout_constraintVertical_bias="0.388" />
 </androidx.constraintlayout.widget.ConstraintLayout>

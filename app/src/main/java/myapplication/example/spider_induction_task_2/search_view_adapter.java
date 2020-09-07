@@ -1,6 +1,7 @@
 package myapplication.example.spider_induction_task_2;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,12 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class search_view_adapter extends RecyclerView.Adapter<search_view_adapter.ExampleViewHolder>{
+public class search_view_adapter extends RecyclerView.Adapter<search_view_adapter.ExampleViewHolder> implements Filterable{
     private ArrayList<search_view> mExampleList;
     private OnItemClickListener mListener;
+    private ArrayList<search_view> exampleListFull;
+
+
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -48,6 +52,7 @@ public class search_view_adapter extends RecyclerView.Adapter<search_view_adapte
     }
     public search_view_adapter(ArrayList<search_view> exampleList ) {
         mExampleList = exampleList;
+        exampleListFull = new ArrayList<>(exampleList);
     }
 
     @Override
@@ -68,4 +73,33 @@ public class search_view_adapter extends RecyclerView.Adapter<search_view_adapte
         return mExampleList.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering( CharSequence constraint ) {
+            List<search_view>filteredList = new ArrayList<>();
+            if(constraint == null  || constraint.length() == 0)filteredList.addAll(exampleListFull);
+            else{
+                String filterPattern = constraint.toString();
+                for(search_view item : exampleListFull ){
+                    ArrayList<String> arrayList = new ArrayList<>(item.getkeywords());
+                    if(arrayList.contains(filterPattern)) filteredList.add(item);
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults( CharSequence constraint, FilterResults results ) {
+            mExampleList.clear();
+            mExampleList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }
