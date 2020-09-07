@@ -121,6 +121,7 @@ public class for_search extends AppCompatActivity implements search_view_adapter
                 else{
                     if(search_box.getText().length()== 0)search_box.setError("please enter thing to search");
                     else{
+                        keywords_complete_list.clear();
                         web_url = "https://images-api.nasa.gov/search?q=";
                         from_edittext = search_box.getText().toString();
                         web_url = web_url+from_edittext;
@@ -172,8 +173,8 @@ public class for_search extends AppCompatActivity implements search_view_adapter
             @Override
             public void onTextChanged( CharSequence s, int start, int before, int count ) {
                if(count % 2 == 0){
-                   Log.d("status","start = "+start+" before = "+before+" count = "+count);
-                    web_url = "https://images-api.nasa.gov/search?q=";
+                    keywords_complete_list.clear();
+                   web_url = "https://images-api.nasa.gov/search?q=";
                     from_edittext = search_box.getText().toString();
                     web_url = web_url+from_edittext;
                     from_edittext = "";
@@ -187,7 +188,6 @@ public class for_search extends AppCompatActivity implements search_view_adapter
 
             @Override
             public void afterTextChanged( Editable s ) {
-                for_search.performClick();
             }
         });
     }
